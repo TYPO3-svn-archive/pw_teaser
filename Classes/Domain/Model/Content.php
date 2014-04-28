@@ -1,12 +1,12 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\Domain\Model;
-
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
 *                Tim Klein-Hitpass <tim.klein-hitpass@diemedialen.de>
 *                Kai Ratzeburg <kai.ratzeburg@diemedialen.de>
+*
+*  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
 *
 *  All rights reserved
 *
@@ -33,7 +33,7 @@ namespace PwTeaserTeam\PwTeaser\Domain\Model;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Content extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractEntity {
 
 	/**
 	 * ctype
@@ -73,6 +73,11 @@ class Content extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	protected $categories;
 
+	/**
+	 * Complete row (from database) of this content element
+	 * @var array
+	 */
+	protected $_contentRow = NULL;
 
 	/**
 	 * Constructor
@@ -235,6 +240,39 @@ class Content extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function removeCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
 		$this->categories->detach($category);
+	}
+
+	/**
+	 * Checks for attribute in _contentRow
+	 *
+	 * @param string $name Name of unknown method
+	 * @param array arguments Arguments of call
+	 *
+	 * @return mixed
+	 */
+	public function __call($name, $arguments) {
+		if (substr(strtolower($name), 0, 3) == 'get' && strlen($name) > 3) {
+			$attributeName = lcfirst(substr($name, 3));
+
+			if (empty($this->_contentRow)) {
+				/** @var \TYPO3\CMS\Frontend\Page\PageRepository $pageSelect */
+				$pageSelect = $GLOBALS['TSFE']->sys_page;
+				$contentRow = $pageSelect->getRawRecord('tt_content', $this->getUid());
+				foreach ($contentRow as $key => $value) {
+					$this->_contentRow[\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($key)] = $value;
+				}
+			}
+			if (isset($this->_contentRow[$attributeName])) {
+				return $this->_contentRow[$attributeName];
+			}
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getContentRow() {
+		return $this->_contentRow;
 	}
 }
 ?>

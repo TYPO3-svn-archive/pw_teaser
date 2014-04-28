@@ -6,6 +6,8 @@ namespace PwTeaserTeam\PwTeaser\ViewHelpers\Widget\Controller;
  *
  *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
  *
+ *  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -32,7 +34,7 @@ namespace PwTeaserTeam\PwTeaser\ViewHelpers\Widget\Controller;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController {
+class Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController extends Tx_Fluid_Core_Widget_AbstractWidgetController {
 	/**
 	 * @var array
 	 */

@@ -1,12 +1,12 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\Domain\Repository;
-
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
 *                Tim Klein-Hitpass <tim.klein-hitpass@diemedialen.de>
 *                Kai Ratzeburg <kai.ratzeburg@diemedialen.de>
+*
+*  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
 *
 *  All rights reserved
 *
@@ -33,7 +33,7 @@ namespace PwTeaserTeam\PwTeaser\Domain\Repository;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ContentRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
+class Tx_PwTeaser_Domain_Repository_ContentRepository extends Tx_Extbase_Persistence_Repository {
 
 	/**
 	 * Initializes the repository.

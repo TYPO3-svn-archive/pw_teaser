@@ -1,12 +1,12 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\ViewHelpers;
-
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
 *                Tim Klein-Hitpass <tim.klein-hitpass@diemedialen.de>
 *                Kai Ratzeburg <kai.ratzeburg@diemedialen.de>
+*
+*  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
 *
 *  All rights reserved
 *
@@ -34,7 +34,7 @@ namespace PwTeaserTeam\PwTeaser\ViewHelpers;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class GetContentViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class Tx_PwTeaser_ViewHelpers_GetContentViewHelper extends Tx_Fluid_Core_ViewHelper_AbstractViewHelper {
 	/**
 	 * Get content
 	 *

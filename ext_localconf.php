@@ -9,7 +9,7 @@ if ($extConfiguration['ENABLECACHE'] == '0') {
 	$actionNotToCache = 'index';
 }
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+t3lib_extMgm::configurePlugin(
 	'PwTeaserTeam.' . $_EXTKEY,
 	'Pi1',
 	array(
@@ -20,7 +20,7 @@ if ($extConfiguration['ENABLECACHE'] == '0') {
 	)
 );
 
-$rootLineFields = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(
+$rootLineFields = t3lib_div::trimExplode(
 	',',
 	$TYPO3_CONF_VARS['FE']['addRootLineFields'],
 	TRUE

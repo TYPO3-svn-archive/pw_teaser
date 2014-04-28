@@ -1,13 +1,13 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\Controller;
-
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
 *                Tim Klein-Hitpass <tim.klein-hitpass@diemedialen.de>
 *                Kai Ratzeburg <kai.ratzeburg@diemedialen.de>
- *
+*
+*  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
+*
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,7 @@ namespace PwTeaserTeam\PwTeaser\Controller;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class TeaserController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_ActionController {
 	/**
 	 * @var array
 	 */

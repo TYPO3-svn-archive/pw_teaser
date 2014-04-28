@@ -1,11 +1,11 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\Utility;
-
 /***************************************************************
  *  Copyright notice
  *
  *  (c) 2011-2014 Armin Ruediger Vieweg <armin@v.ieweg.de>
  *                Benjamin Schulte <benjamin.schulte@diemedialen.de>
+ *
+ *  THIS IS A BACKPORT FOR TYPO3 4.x OF VERSION 3.1.1
  *
  *  All rights reserved
  *
@@ -32,7 +32,7 @@ namespace PwTeaserTeam\PwTeaser\Utility;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Settings {
+class Tx_PwTeaser_Utility_Settings {
 	/**
 	 * @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	 */
@@ -97,7 +97,7 @@ class Settings {
 		);
 		$typoscript = $typoscript['plugin.'][$extkey . '.']['settings.'];
 		foreach ($settings as $key => $setting) {
-			if ($setting === '' && array_key_exists($key, $typoscript)) {
+			if ($setting === '' && is_array($typoscript) && array_key_exists($key, $typoscript)) {
 				$settings[$key] = $typoscript[$key];
 			}
 		}

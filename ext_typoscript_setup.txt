@@ -1,7 +1,7 @@
 plugin.tx_pwteaser {
 	persistence {
 		classes {
-			PwTeaserTeam\PwTeaser\Domain\Model\Page {
+			Tx_PwTeaser_Domain_Model_Page {
 				mapping {
 					tableName = pages
 					columns {
@@ -18,7 +18,7 @@ plugin.tx_pwteaser {
 					}
 				}
 			}
-			PwTeaserTeam\PwTeaser\Domain\Model\Content {
+			Tx_PwTeaser_Domain_Model_Content {
 				mapping {
 					tableName = tt_content
 					columns {
