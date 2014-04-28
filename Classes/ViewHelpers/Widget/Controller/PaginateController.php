@@ -1,6 +1,4 @@
 <?php
-namespace PwTeaserTeam\PwTeaser\ViewHelpers\Widget\Controller;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -67,7 +65,7 @@ class Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController extends Tx_Fl
 	 */
 	public function initializeAction() {
 		$this->objects = $this->widgetConfiguration['objects'];
-		$this->configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::array_merge_recursive_overrule(
+		$this->configuration = t3lib_div::array_merge_recursive_overrule(
 			$this->configuration,
 			$this->widgetConfiguration['configuration'],
 			TRUE
@@ -143,7 +141,7 @@ class Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController extends Tx_Fl
 	/**
 	 * Returns all visible objects within a range, depending on itemsPerPage and the currentPage.
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult|array $objects the list of objects
+	 * @param Tx_Extbase_Persistence_QueryResult|array $objects the list of objects
 	 * @return array<mixed> the list of visible objects
 	 */
 	public function getVisibleObjects($objects) {

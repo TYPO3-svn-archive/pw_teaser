@@ -1,11 +1,21 @@
+#lib.tx_pwteaser = USER
+#lib.tx_pwteaser {
+#	userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+#
+#	vendorName = PwTeaserTeam
+#	extensionName = PwTeaser
+#	pluginName = Pi1
+#
+#	settings =< plugin.tx_pwteaser.settings
+#	persistence =< plugin.tx_pwteaser.persistence
+#	view =< plugin.tx_pwteaser.view
+#}
+
 lib.tx_pwteaser = USER
 lib.tx_pwteaser {
-	userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-
-	vendorName = PwTeaserTeam
+	userFunc = tx_extbase_core_bootstrap->run
 	extensionName = PwTeaser
 	pluginName = Pi1
-
 	settings =< plugin.tx_pwteaser.settings
 	persistence =< plugin.tx_pwteaser.persistence
 	view =< plugin.tx_pwteaser.view

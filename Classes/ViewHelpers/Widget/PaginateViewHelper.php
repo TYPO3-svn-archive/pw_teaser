@@ -34,10 +34,20 @@
  */
 class Tx_PwTeaser_ViewHelpers_Widget_PaginateViewHelper extends Tx_Fluid_Core_Widget_AbstractWidgetViewHelper  {
 	/**
-	 * @var \PwTeaserTeam\PwTeaser\ViewHelpers\Widget\Controller\PaginateController
+	 * @var Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController
 	 * @inject
 	 */
 	protected $controller;
+
+	/**
+	 * Injection of widget controller
+	 *
+	 * @param Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController $controller
+	 * @return void
+	 */
+	public function injectController(Tx_PwTeaser_ViewHelpers_Widget_Controller_PaginateController $controller) {
+		$this->controller = $controller;
+	}
 
 	/**
 	 * The render method of widget

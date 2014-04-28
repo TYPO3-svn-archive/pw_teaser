@@ -34,15 +34,25 @@
  */
 class Tx_PwTeaser_Utility_Settings {
 	/**
-	 * @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
+	 * @var tslib_cObj
 	 */
 	protected $contentObject;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
+	 * @var Tx_Extbase_Configuration_ConfigurationManagerInterface
 	 * @inject
 	 */
 	protected $configurationManager = NULL;
+
+	/**
+	 * Injects the configurationManager
+	 *
+	 * @param Tx_Extbase_Configuration_ConfigurationManagerInterface $configurationManager
+	 * @return void
+	 */
+	public function injectConfigurationManager(Tx_Extbase_Configuration_ConfigurationManagerInterface $configurationManager) {
+		$this->configurationManager = $configurationManager;
+	}
 
 	/**
 	 * Initialize this settings utility
@@ -93,7 +103,7 @@ class Tx_PwTeaser_Utility_Settings {
 	protected function enhanceSettingsWithTypoScript(array $settings) {
 		$extkey = 'tx_pwteaser';
 		$typoscript = $this->configurationManager->getConfiguration(
-			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+			Tx_Extbase_Configuration_ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
 		);
 		$typoscript = $typoscript['plugin.'][$extkey . '.']['settings.'];
 		foreach ($settings as $key => $setting) {

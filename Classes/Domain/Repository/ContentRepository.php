@@ -42,8 +42,8 @@ class Tx_PwTeaser_Domain_Repository_ContentRepository extends Tx_Extbase_Persist
 	 * @see \TYPO3\CMS\Extbase\Persistence\Repository::initializeObject()
 	 */
 	public function initializeObject() {
-		/** @var \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings */
-		$querySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface');
+		/** @var Tx_Extbase_Persistence_QuerySettingsInterface $querySettings */
+		$querySettings = $this->objectManager->get('Tx_Extbase_Persistence_QuerySettingsInterface');
 		$querySettings->setRespectStoragePage(FALSE);
 		$this->setDefaultQuerySettings($querySettings);
 	}
@@ -53,7 +53,7 @@ class Tx_PwTeaser_Domain_Repository_ContentRepository extends Tx_Extbase_Persist
 	 * overwritten method exists, to perform sorting
 	 *
 	 * @param integer $pid Pid to search for
-	 * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult All found objects, will be
+	 * @return Tx_Extbase_Persistence_QueryResult All found objects, will be
 	 *         empty if there are no objects
 	 */
 	public function findByPid($pid) {
@@ -62,7 +62,7 @@ class Tx_PwTeaser_Domain_Repository_ContentRepository extends Tx_Extbase_Persist
 			$query->equals('pid', $pid)
 		);
 		$query->setOrderings(array(
-			'sorting' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
+			'sorting' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING
 		));
 		return $query->execute();
 	}
@@ -71,8 +71,8 @@ class Tx_PwTeaser_Domain_Repository_ContentRepository extends Tx_Extbase_Persist
 	 * Returns all objects of this repository which are located inside the
 	 * given pages
 	 *
-	 * @param array<\PwTeaserTeam\PwTeaser\Domain\Model\Page> $pages Pages to get content elements
-	 * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult All found objects, will be
+	 * @param array<Tx_PwTeaser_Domain_Model_Page> $pages Pages to get content elements
+	 * @return Tx_Extbase_Persistence_QueryResult All found objects, will be
 	 *         empty if there are no objects
 	 */
 	public function findByPages($pages) {

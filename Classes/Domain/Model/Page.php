@@ -101,7 +101,7 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 
 	/**
 	 * media
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+	 * @var string
 	 */
 	protected $media;
 
@@ -155,15 +155,15 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 
 	/**
 	 * contents
-	 * @var array<\PwTeaserTeam\PwTeaser\Domain\Model\Content>
+	 * @var array<Tx_PwTeaser_Domain_Model_Content>
 	 */
 	protected $contents;
 
-	/**
-	 * Categories
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\Category>
-	 */
-	protected $categories;
+//	/**
+//	 * Categories
+//	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\Category>
+//	 */
+//	protected $categories;
 
 	/**
 	 * @var integer
@@ -184,11 +184,11 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	 */
 	protected $_pageRow = NULL;
 
-	/**
-	 * @var \TYPO3\CMS\Core\Resource\FileRepository
-	 * @inject
-	 */
-	protected $fileRepository;
+//	/**
+//	 * @var \TYPO3\CMS\Core\Resource\FileRepository
+//	 * @inject
+//	 */
+//	protected $fileRepository;
 
 	/**
 	 * Sets a custom attribute
@@ -241,11 +241,11 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 			}
 
 			if (empty($this->_pageRow)) {
-				/** @var \TYPO3\CMS\Frontend\Page\PageRepository $pageSelect */
+				/** @var t3lib_pageSelect $pageSelect */
 				$pageSelect = $GLOBALS['TSFE']->sys_page;
 				$pageRow = $pageSelect->getPage($this->getUid());
 				foreach ($pageRow as $key => $value) {
-					$this->_pageRow[\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($key)] = $value;
+					$this->_pageRow[t3lib_div::underscoredToLowerCamelCase($key)] = $value;
 				}
 			}
 			if (isset($this->_pageRow[$attributeName])) {
@@ -258,8 +258,6 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->categories = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-		$this->media = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 
 	/**
@@ -335,7 +333,7 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	 * @return array array of keywords
 	 */
 	public function getKeywords() {
-		return(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->keywords, TRUE));
+		return(t3lib_div::trimExplode(',', $this->keywords, TRUE));
 	}
 
 	/**
@@ -465,37 +463,37 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	/**
 	 * Setter for media
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $media
+	 * @param string $media
 	 * @return void
 	 */
-	public function setMedia(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $media) {
+	public function setMedia($media) {
 		$this->media = $media;
 	}
 
 	/**
-	 * Getter for media (returns FileReference objects)
+	 * Getter for media
 	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+	 * @return string
 	 */
 	public function getMedia() {
 		return $this->media;
 	}
 
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $medium
-	 * @return void
-	 */
-	public function addMedium(\TYPO3\CMS\Extbase\Domain\Model\FileReference $medium) {
-		$this->media->attach($medium);
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $medium
-	 * @return void
-	 */
-	public function removeMedium(\TYPO3\CMS\Extbase\Domain\Model\FileReference $medium) {
-		$this->media->detach($medium);
-	}
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $medium
+//	 * @return void
+//	 */
+//	public function addMedium(\TYPO3\CMS\Extbase\Domain\Model\FileReference $medium) {
+//		$this->media->attach($medium);
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $medium
+//	 * @return void
+//	 */
+//	public function removeMedium(\TYPO3\CMS\Extbase\Domain\Model\FileReference $medium) {
+//		$this->media->detach($medium);
+//	}
 
 	/**
 	 * Returns media files as array (with all attributes)
@@ -503,12 +501,13 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	 * @return array
 	 */
 	public function getMediaFiles() {
-		$mediaFiles = array();
-		/** @var \TYPO3\CMS\Extbase\Domain\Model\FileReference $medium */
-		foreach ($this->getMedia() as $medium) {
-			$mediaFiles[] = $medium->getOriginalResource()->toArray();
+		$defaultMediaDirectory = 'uploads/media/';
+		$media = t3lib_div::trimExplode(',', $this->media, TRUE);
+
+		foreach ($media as $key => $medium) {
+			$media[$key] = $defaultMediaDirectory . $medium;
 		}
-		return $mediaFiles;
+		return $media;
 	}
 
 	/**
@@ -694,36 +693,36 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 		$this->l18nConfiguration = $l18nCfg;
 	}
 
-	/**
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
-	 */
-	public function getCategories() {
-		return $this->categories;
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
-	 * @return void
-	 */
-	public function setCategories($categories) {
-		$this->categories = $categories;
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
-	 * @return void
-	 */
-	public function addCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
-		$this->categories->attach($category);
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
-	 * @return void
-	 */
-	public function removeCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
-		$this->categories->detach($category);
-	}
+//	/**
+//	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+//	 */
+//	public function getCategories() {
+//		return $this->categories;
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
+//	 * @return void
+//	 */
+//	public function setCategories($categories) {
+//		$this->categories = $categories;
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
+//	 * @return void
+//	 */
+//	public function addCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
+//		$this->categories->attach($category);
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
+//	 * @return void
+//	 */
+//	public function removeCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
+//		$this->categories->detach($category);
+//	}
 
 	/**
 	 * Returns rootLine of this page
@@ -731,7 +730,7 @@ class Tx_PwTeaser_Domain_Model_Page extends Tx_Extbase_DomainObject_AbstractEnti
 	 * @return array
 	 */
 	public function getRootLine() {
-		/** @var \TYPO3\CMS\Frontend\Page\PageRepository $pageSelect */
+		/** @var t3lib_pageSelect $pageSelect */
 		$pageSelect = $GLOBALS['TSFE']->sys_page;
 		return $pageSelect->getRootLine($this->getUid());
 	}

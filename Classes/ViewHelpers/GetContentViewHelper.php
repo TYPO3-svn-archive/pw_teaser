@@ -56,7 +56,7 @@ class Tx_PwTeaser_ViewHelpers_GetContentViewHelper extends Tx_Fluid_Core_ViewHel
 		$breakNow = FALSE;
 		$asHasBeenSet = FALSE;
 
-		/** @var $content \PwTeaserTeam\PwTeaser\Domain\Model\Content */
+		/** @var $content Tx_PwTeaser_Domain_Model_Content */
 		foreach ($contents as $content) {
 			$contentCtype = $content->getCtype();
 			$contentColPos = $content->getColPos();

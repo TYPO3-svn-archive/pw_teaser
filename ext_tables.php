@@ -3,8 +3,8 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-t3lib_extMgm::registerPlugin(
-	'PwTeaserTeam.' . $_EXTKEY,
+Tx_Extbase_Utility_Extension::registerPlugin(
+	$_EXTKEY,
 	'Pi1',
 	'Page Teaser (pw_teaser)'
 );

@@ -63,15 +63,15 @@ class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractE
 	 * image
 	 * It may contain multiple images, but TYPO3 called this field just "image"
 	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+	 * @var string
 	 */
 	protected $image;
 
-	/**
-	 * Categories
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\Category>
-	 */
-	protected $categories;
+//	/**
+//	 * Categories
+//	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\Category>
+//	 */
+//	protected $categories;
 
 	/**
 	 * Complete row (from database) of this content element
@@ -83,43 +83,42 @@ class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractE
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->image = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 
 	/**
 	 * Setter for image(s)
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $image
+	 * @param string $image
 	 * @return void
 	 */
-	public function setImage(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $image) {
+	public function setImage($image) {
 		$this->image = $image;
 	}
 
 	/**
 	 * Getter for images
 	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage images
+	 * @return string
 	 */
 	public function getImage() {
 		return $this->image;
 	}
 
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
-	 * @return void
-	 */
-	public function addImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image) {
-		$this->image->attach($image);
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
-	 * @return void
-	 */
-	public function removeImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image) {
-		$this->image->detach($image);
-	}
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
+//	 * @return void
+//	 */
+//	public function addImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image) {
+//		$this->image->attach($image);
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
+//	 * @return void
+//	 */
+//	public function removeImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image) {
+//		$this->image->detach($image);
+//	}
 
 	/**
 	 * Returns image files as array (with all attributes)
@@ -127,12 +126,14 @@ class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractE
 	 * @return array
 	 */
 	public function getImageFiles() {
-		$imageFiles = array();
-		/** @var \TYPO3\CMS\Extbase\Domain\Model\FileReference $image */
-		foreach ($this->getImage() as $image) {
-			$imageFiles[] = $image->getOriginalResource()->toArray();
+		$defaultDirectory = 'uploads/pics/';
+		$images = t3lib_div::trimExplode(',', $this->image, TRUE);
+
+		foreach ($images as $key => $imgage) {
+			$images[$key] = $defaultDirectory . $imgage;
 		}
-		return $imageFiles;
+
+		return $images;
 	}
 
 	/**
@@ -211,36 +212,36 @@ class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractE
 		return $this->header;
 	}
 
-	/**
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
-	 */
-	public function getCategories() {
-		return $this->categories;
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
-	 * @return void
-	 */
-	public function setCategories($categories) {
-		$this->categories = $categories;
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
-	 * @return void
-	 */
-	public function addCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
-		$this->categories->attach($category);
-	}
-
-	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
-	 * @return void
-	 */
-	public function removeCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
-		$this->categories->detach($category);
-	}
+//	/**
+//	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+//	 */
+//	public function getCategories() {
+//		return $this->categories;
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
+//	 * @return void
+//	 */
+//	public function setCategories($categories) {
+//		$this->categories = $categories;
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
+//	 * @return void
+//	 */
+//	public function addCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
+//		$this->categories->attach($category);
+//	}
+//
+//	/**
+//	 * @param \TYPO3\CMS\Extbase\Domain\Model\Category $category
+//	 * @return void
+//	 */
+//	public function removeCategory(\TYPO3\CMS\Extbase\Domain\Model\Category $category) {
+//		$this->categories->detach($category);
+//	}
 
 	/**
 	 * Checks for attribute in _contentRow
@@ -259,7 +260,7 @@ class Tx_PwTeaser_Domain_Model_Content extends Tx_Extbase_DomainObject_AbstractE
 				$pageSelect = $GLOBALS['TSFE']->sys_page;
 				$contentRow = $pageSelect->getRawRecord('tt_content', $this->getUid());
 				foreach ($contentRow as $key => $value) {
-					$this->_contentRow[\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($key)] = $value;
+					$this->_contentRow[t3lib_div::underscoredToLowerCamelCase($key)] = $value;
 				}
 			}
 			if (isset($this->_contentRow[$attributeName])) {

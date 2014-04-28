@@ -4,28 +4,28 @@ if (!defined ('TYPO3_MODE')) {
 }
 
 $extConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY]);
-$actionNotToCache = '';
+$actionNotToCache = array();
 if ($extConfiguration['ENABLECACHE'] == '0') {
-	$actionNotToCache = 'index';
+	$actionNotToCache = array(
+		'Teaser' => 'index',
+	);
 }
 
-t3lib_extMgm::configurePlugin(
-	'PwTeaserTeam.' . $_EXTKEY,
+Tx_Extbase_Utility_Extension::configurePlugin(
+	$_EXTKEY,
 	'Pi1',
 	array(
 		'Teaser' => 'index',
 	),
-	array(
-		'Teaser' => $actionNotToCache,
-	)
+	$actionNotToCache
 );
 
-$rootLineFields = t3lib_div::trimExplode(
-	',',
-	$TYPO3_CONF_VARS['FE']['addRootLineFields'],
-	TRUE
-);
-$rootLineFields[] = 'sorting';
-$TYPO3_CONF_VARS['FE']['addRootLineFields'] = implode(',', $rootLineFields);
+//$rootLineFields = t3lib_div::trimExplode(
+//	',',
+//	$TYPO3_CONF_VARS['FE']['addRootLineFields'],
+//	TRUE
+//);
+//$rootLineFields[] = 'sorting';
+//$TYPO3_CONF_VARS['FE']['addRootLineFields'] = implode(',', $rootLineFields);
 
 ?>

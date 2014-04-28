@@ -45,25 +45,25 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 	protected $currentPageUid = NULL;
 
 	/**
-	 * @var \PwTeaserTeam\PwTeaser\Domain\Repository\PageRepository
+	 * @var Tx_PwTeaser_Domain_Repository_PageRepository
 	 * @inject
 	 */
 	protected $pageRepository;
 
 	/**
-	 * @var \PwTeaserTeam\PwTeaser\Domain\Repository\ContentRepository
+	 * @var Tx_PwTeaser_Domain_Repository_ContentRepository
 	 * @inject
 	 */
 	protected $contentRepository;
 
-	/**
-	 * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
-	 * @inject
-	 */
-	protected $categoryRepository;
+//	/**
+//	 * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
+//	 * @inject
+//	 */
+//	protected $categoryRepository;
 
 	/**
-	 * @var \PwTeaserTeam\PwTeaser\Utility\Settings
+	 * @var Tx_PwTeaser_Utility_Settings
 	 * @inject
 	 */
 	protected $settingsUtility;
@@ -74,10 +74,44 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 	protected $contentObject = NULL;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 * @var Tx_Extbase_SignalSlot_Dispatcher
 	 * @inject
 	 */
 	protected $signalSlotDispatcher;
+
+	/**
+	 * @param Tx_PwTeaser_Domain_Repository_PageRepository $pageRepository
+	 * @return void
+	 */
+	public function injectPageRepository(Tx_PwTeaser_Domain_Repository_PageRepository $pageRepository) {
+		$this->pageRepository = $pageRepository;
+	}
+
+	/**
+	 * @param Tx_PwTeaser_Domain_Repository_ContentRepository $contentRepository
+	 * @return void
+	 */
+	public function injectContentRepository(Tx_PwTeaser_Domain_Repository_ContentRepository $contentRepository) {
+		$this->contentRepository = $contentRepository;
+	}
+
+	/**
+	 * @param Tx_PwTeaser_Utility_Settings $settingsUtility
+	 * @return void
+	 */
+	public function injectSettingsUtility(Tx_PwTeaser_Utility_Settings $settingsUtility) {
+		$this->settingsUtility = $settingsUtility;
+	}
+
+	/**
+	 * @param Tx_Extbase_SignalSlot_Dispatcher $signalSlotDispatcher
+	 * @return void
+	 */
+	public function injectSignalSlotDispatcher(Tx_Extbase_SignalSlot_Dispatcher $signalSlotDispatcher) {
+		$this->signalSlotDispatcher = $signalSlotDispatcher;
+	}
+
+
 
 	/**
 	 * Initialize Action will performed before each action will be executed
@@ -136,7 +170,7 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 
 		if ($this->settings['orderBy'] === 'sorting' && strpos($this->settings['source'], 'Recursively') !== FALSE) {
 			usort($pages, array($this, 'sortByRecursivelySorting'));
-			if (strtolower($this->settings['orderDirection']) === strtolower(\TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING)) {
+			if (strtolower($this->settings['orderDirection']) === strtolower(Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING)) {
 				$pages = array_reverse($pages);
 			}
 			if (!empty($this->settings['limit'])) {
@@ -144,7 +178,7 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 			}
 		}
 
-		/** @var $page \PwTeaserTeam\PwTeaser\Domain\Model\Page */
+		/** @var $page Tx_PwTeaser_Domain_Model_Page */
 		foreach ($pages as $page) {
 			if ($page->getUid() === $this->currentPageUid) {
 				$page->setIsCurrentPage(TRUE);
@@ -163,11 +197,11 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 	/**
 	 * Function to sort given pages by recursiveRootLineOrdering string
 	 *
-	 * @param \PwTeaserTeam\PwTeaser\Domain\Model\Page $a
-	 * @param \PwTeaserTeam\PwTeaser\Domain\Model\Page $b
+	 * @param Tx_PwTeaser_Domain_Model_Page $a
+	 * @param Tx_PwTeaser_Domain_Model_Page $b
 	 * @return integer
 	 */
-	protected function sortByRecursivelySorting(\PwTeaserTeam\PwTeaser\Domain\Model\Page $a, \PwTeaserTeam\PwTeaser\Domain\Model\Page $b) {
+	protected function sortByRecursivelySorting(Tx_PwTeaser_Domain_Model_Page $a, Tx_PwTeaser_Domain_Model_Page $b) {
 		if ($a->getRecursiveRootLineOrdering() == $b->getRecursiveRootLineOrdering()) {
 			return 0;
 		}
@@ -206,7 +240,7 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 	 */
 	protected function performTemplatePathAndFilename() {
 		$frameworkSettings = $this->configurationManager->getConfiguration(
-			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+			Tx_Extbase_Configuration_ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
 		);
 		$templateType = $frameworkSettings['view']['templateType'];
 		$templateFile = $frameworkSettings['view']['templateRootFile'];
@@ -240,41 +274,41 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 	protected function performPluginConfigurations() {
 			// Set ShowNavHiddenItems to TRUE
 		$this->pageRepository->setShowNavHiddenItems(($this->settings['showNavHiddenItems'] == '1'));
-		$this->pageRepository->setFilteredDokType(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->settings['showDoktypes'], TRUE));
+		$this->pageRepository->setFilteredDokType(t3lib_div::trimExplode(',', $this->settings['showDoktypes'], TRUE));
 
 		if ($this->settings['hideCurrentPage'] == '1') {
 			$this->pageRepository->setIgnoreOfUid($this->currentPageUid);
 		}
 
 		if ($this->settings['ignoreUids']) {
-			$ignoringUids = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->settings['ignoreUids'], TRUE);
+			$ignoringUids = t3lib_div::trimExplode(',', $this->settings['ignoreUids'], TRUE);
 			array_map(array($this->pageRepository, 'setIgnoreOfUid'), $ignoringUids);
 		}
 
-		if ($this->settings['categoriesList'] && $this->settings['categoryMode']) {
-			$categories = array();
-			foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $this->settings['categoriesList'], TRUE) as $categoryUid) {
-				$categories[] = $this->categoryRepository->findByUid($categoryUid);
-			}
-
-			switch ((int)$this->settings['categoryMode']) {
-				case \PwTeaserTeam\PwTeaser\Domain\Repository\PageRepository::CATEGORY_MODE_OR:
-				case \PwTeaserTeam\PwTeaser\Domain\Repository\PageRepository::CATEGORY_MODE_OR_NOT:
-					$isAnd = FALSE;
-					break;
-				default:
-					$isAnd = TRUE;
-			}
-			switch ((int)$this->settings['categoryMode']) {
-				case \PwTeaserTeam\PwTeaser\Domain\Repository\PageRepository::CATEGORY_MODE_AND_NOT:
-				case \PwTeaserTeam\PwTeaser\Domain\Repository\PageRepository::CATEGORY_MODE_OR_NOT:
-					$isNot = TRUE;
-					break;
-				default:
-					$isNot = FALSE;
-			}
-			$this->pageRepository->addCategoryConstraint($categories, $isAnd, $isNot);
-		}
+//		if ($this->settings['categoriesList'] && $this->settings['categoryMode']) {
+//			$categories = array();
+//			foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $this->settings['categoriesList'], TRUE) as $categoryUid) {
+//				$categories[] = $this->categoryRepository->findByUid($categoryUid);
+//			}
+//
+//			switch ((int)$this->settings['categoryMode']) {
+//				case Tx_PwTeaser_Domain_Repository_PageRepository::CATEGORY_MODE_OR:
+//				case Tx_PwTeaser_Domain_Repository_PageRepository::CATEGORY_MODE_OR_NOT:
+//					$isAnd = FALSE;
+//					break;
+//				default:
+//					$isAnd = TRUE;
+//			}
+//			switch ((int)$this->settings['categoryMode']) {
+//				case Tx_PwTeaser_Domain_Repository_PageRepository::CATEGORY_MODE_AND_NOT:
+//				case Tx_PwTeaser_Domain_Repository_PageRepository::CATEGORY_MODE_OR_NOT:
+//					$isNot = TRUE;
+//					break;
+//				default:
+//					$isNot = FALSE;
+//			}
+//			$this->pageRepository->addCategoryConstraint($categories, $isAnd, $isNot);
+//		}
 	}
 }
 ?>

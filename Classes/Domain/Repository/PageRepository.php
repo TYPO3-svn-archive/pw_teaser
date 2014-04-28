@@ -53,10 +53,10 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * Direction to order. Default is ascending.
 	 * @var string
 	 */
-	protected $orderDirection = \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING;
+	protected $orderDirection = Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Persistence\QueryInterface
+	 * @var Tx_Extbase_Persistence_QueryInterface
 	 */
 	protected $query = NULL;
 
@@ -73,8 +73,8 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * @see \TYPO3\CMS\Extbase\Persistence\Repository::initializeObject()
 	 */
 	public function initializeObject() {
-		/** @var \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings */
-		$querySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface');
+		/** @var Tx_Extbase_Persistence_QuerySettingsInterface $querySettings */
+		$querySettings = $this->objectManager->get('Tx_Extbase_Persistence_QuerySettingsInterface');
 		$querySettings->setRespectStoragePage(FALSE);
 		$this->setDefaultQuerySettings($querySettings);
 		$this->query = $this->createQuery();
@@ -114,7 +114,7 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * @return array All found pages, will be empty if the result is empty
 	 */
 	public function findByPidList($pidlist, $orderByPlugin = FALSE) {
-		$pagePids =	\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $pidlist, TRUE);
+		$pagePids =	t3lib_div::intExplode(',', $pidlist, TRUE);
 
 		$query = $this->query;
 		$this->addQueryConstraint($query->in('uid', $pagePids));
@@ -163,7 +163,7 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * @return array All found pages, will be empty if the result is empty
 	 */
 	public function findChildrenByPidList($pidlist) {
-		$pagePids =	\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(
+		$pagePids =	t3lib_div::intExplode(
 			',',
 			$pidlist,
 			TRUE
@@ -191,47 +191,47 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	/**
 	 * Adds query constraint to array
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface $constraint Constraint to add
+	 * @param Tx_Extbase_Persistence_QOM_ConstraintInterface $constraint Constraint to add
 	 * @return void
 	 */
-	protected function addQueryConstraint(\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface $constraint) {
+	protected function addQueryConstraint(Tx_Extbase_Persistence_QOM_ConstraintInterface $constraint) {
 		$this->queryConstraints[] = $constraint;
 	}
 
-	/**
-	 * Add category constraint
-	 *
-	 * @param array $categories
-	 * @param boolean $isAnd If TRUE categories get a logicalAnd. Otherwise a logicalOr.
-	 * @param boolean $isNot If TRUE categories get a logicalNot operator. Otherwise not.
-	 * @return void
-	 */
-	public function addCategoryConstraint(array $categories, $isAnd = TRUE, $isNot = FALSE) {
-		if ($isAnd === TRUE && $isNot === FALSE) {
-			$this->queryConstraints[] = $this->query->logicalAnd(
-				$this->buildCategoryConstraint($categories)
-			);
-		}
-		if ($isAnd === TRUE && $isNot === TRUE) {
-			$this->queryConstraints[] = $this->query->logicalNot(
-				$this->query->logicalAnd(
-					$this->buildCategoryConstraint($categories)
-				)
-			);
-		}
-		if ($isAnd === FALSE && $isNot === FALSE) {
-			$this->queryConstraints[] = $this->query->logicalOr(
-				$this->buildCategoryConstraint($categories)
-			);
-		}
-		if ($isAnd === FALSE && $isNot === TRUE) {
-			$this->queryConstraints[] = $this->query->logicalNot(
-				$this->query->logicalOr(
-					$this->buildCategoryConstraint($categories)
-				)
-			);
-		}
-	}
+//	/**
+//	 * Add category constraint
+//	 *
+//	 * @param array $categories
+//	 * @param boolean $isAnd If TRUE categories get a logicalAnd. Otherwise a logicalOr.
+//	 * @param boolean $isNot If TRUE categories get a logicalNot operator. Otherwise not.
+//	 * @return void
+//	 */
+//	public function addCategoryConstraint(array $categories, $isAnd = TRUE, $isNot = FALSE) {
+//		if ($isAnd === TRUE && $isNot === FALSE) {
+//			$this->queryConstraints[] = $this->query->logicalAnd(
+//				$this->buildCategoryConstraint($categories)
+//			);
+//		}
+//		if ($isAnd === TRUE && $isNot === TRUE) {
+//			$this->queryConstraints[] = $this->query->logicalNot(
+//				$this->query->logicalAnd(
+//					$this->buildCategoryConstraint($categories)
+//				)
+//			);
+//		}
+//		if ($isAnd === FALSE && $isNot === FALSE) {
+//			$this->queryConstraints[] = $this->query->logicalOr(
+//				$this->buildCategoryConstraint($categories)
+//			);
+//		}
+//		if ($isAnd === FALSE && $isNot === TRUE) {
+//			$this->queryConstraints[] = $this->query->logicalNot(
+//				$this->query->logicalOr(
+//					$this->buildCategoryConstraint($categories)
+//				)
+//			);
+//		}
+//	}
 
 	/**
 	 * Build category constraint for each category (contains)
@@ -250,7 +250,7 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	/**
 	 * Finalize given query constraints and executes the query
 	 *
-	 * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface Result of query
+	 * @return array|Tx_Extbase_Persistence_QueryResult Result of query
 	 */
 	protected function executeQuery() {
 		$query = $this->query;
@@ -267,35 +267,35 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	/**
 	 * Handles page localization
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $pages
-	 * @return array<\PwTeaserTeam\PwTeaser\Domain\Model\Page>
+	 * @param Tx_Extbase_Persistence_QueryResult $pages
+	 * @return array<Tx_PwTeaser_Domain_Model_Page>
 	 */
-	protected function handlePageLocalization(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $pages) {
+	protected function handlePageLocalization(Tx_Extbase_Persistence_QueryResult $pages) {
 		$currentLangUid = (int) $GLOBALS['TSFE']->sys_page->sys_language_uid;
 		$displayedPages = array();
 
-		/** @var \PwTeaserTeam\PwTeaser\Domain\Model\Page $page */
+		/** @var Tx_PwTeaser_Domain_Model_Page $page */
 		foreach ($pages as $page) {
 			if ($currentLangUid === 0) {
-				if ($page->getL18nConfiguration() !== \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_DEFAULT_LANGUAGE
-						&& $page->getL18nConfiguration() !== \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS) {
+				if ($page->getL18nConfiguration() !== Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_DEFAULT_LANGUAGE
+						&& $page->getL18nConfiguration() !== Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS) {
 					$displayedPages[] = $page;
 				}
 			} else {
-				/** @var \TYPO3\CMS\Frontend\Page\PageRepository $pageSelect */
+				/** @var t3lib_pageSelect $pageSelect */
 				$pageSelect = $GLOBALS['TSFE']->sys_page;
 				$pageRowWithOverlays = $pageSelect->getPage($page->getUid());
 
 				if ((boolean) $GLOBALS['TYPO3_CONF_VARS']['FE']['hidePagesIfNotTranslatedByDefault'] === FALSE) {
-					if (!($page->getL18nConfiguration() === \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_IF_NO_TRANSLATION_EXISTS
-						|| $page->getL18nConfiguration() === \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS)
+					if (!($page->getL18nConfiguration() === Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_IF_NO_TRANSLATION_EXISTS
+						|| $page->getL18nConfiguration() === Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS)
 						|| isset($pageRowWithOverlays['_PAGES_OVERLAY'])
 					) {
 						$displayedPages[] = $page;
 					}
 				} else {
-					if (($page->getL18nConfiguration() === \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_IF_NO_TRANSLATION_EXISTS
-						|| $page->getL18nConfiguration() === \PwTeaserTeam\PwTeaser\Domain\Model\Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS)
+					if (($page->getL18nConfiguration() === Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_IF_NO_TRANSLATION_EXISTS
+						|| $page->getL18nConfiguration() === Tx_PwTeaser_Domain_Model_Page::L18N_HIDE_ALWAYS_BUT_TRANSLATION_EXISTS)
 						&& !isset($pageRowWithOverlays['_PAGES_OVERLAY']) || isset($pageRowWithOverlays['_PAGES_OVERLAY'])
 					) {
 						$displayedPages[] = $page;
@@ -314,13 +314,13 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * @return array Found subpages, recursivley
 	 */
 	protected function getRecursivePageList($pidlist, $recursionDepth) {
-		/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $contentObjectRenderer */
-		$contentObjectRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
+		/** @var tslib_cObj $contentObjectRenderer */
+		$contentObjectRenderer = t3lib_div::makeInstance('tslib_cObj');
 
 		$pagePids = array();
-		$pids = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $pidlist, TRUE);
+		$pids = t3lib_div::intExplode(',', $pidlist, TRUE);
 		foreach ($pids as $pid) {
-			$pageList = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(
+			$pageList = t3lib_div::intExplode(
 				',',
 				$contentObjectRenderer->getTreeList($pid, $recursionDepth),
 				TRUE
@@ -351,9 +351,9 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 */
 	public function setOrderDirection($orderDirection) {
 		if ($orderDirection == 'desc' || $orderDirection == 1) {
-			$this->orderDirection = \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING;
+			$this->orderDirection = Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING;
 		} else {
-			$this->orderDirection = \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING;
+			$this->orderDirection = Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING;
 		}
 	}
 
@@ -407,10 +407,10 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	/**
 	 * Adds handle of ordering to query object
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
+	 * @param Tx_Extbase_Persistence_QueryInterface $query
 	 * @return void
 	 */
-	protected function handleOrdering(\TYPO3\CMS\Extbase\Persistence\QueryInterface $query) {
+	protected function handleOrdering(Tx_Extbase_Persistence_QueryInterface $query) {
 		$query->setOrderings(array($this->orderBy => $this->orderDirection));
 	}
 
