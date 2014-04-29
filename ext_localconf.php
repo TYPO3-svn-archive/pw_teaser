@@ -20,12 +20,12 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 	$actionNotToCache
 );
 
-//$rootLineFields = t3lib_div::trimExplode(
-//	',',
-//	$TYPO3_CONF_VARS['FE']['addRootLineFields'],
-//	TRUE
-//);
-//$rootLineFields[] = 'sorting';
-//$TYPO3_CONF_VARS['FE']['addRootLineFields'] = implode(',', $rootLineFields);
+$rootLineFields = t3lib_div::trimExplode(
+	',',
+	$TYPO3_CONF_VARS['FE']['addRootLineFields'],
+	TRUE
+);
+$rootLineFields[] = 'sorting';
+$TYPO3_CONF_VARS['FE']['addRootLineFields'] = implode(',', $rootLineFields);
 
 ?>
