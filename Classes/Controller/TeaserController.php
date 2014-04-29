@@ -141,7 +141,11 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 				break;
 
 			case 'thisChildrenRecursively':
-				$pages = $this->pageRepository->findByPidRecursively($this->currentPageUid, (int) $this->settings['recursionDepth']);
+				$pages = $this->pageRepository->findByPidRecursively(
+					$this->currentPageUid,
+					(int) $this->settings['recursionDepthFrom'],
+					(int) $this->settings['recursionDepth']
+				);
 				break;
 
 			case 'custom':
@@ -155,6 +159,7 @@ class Tx_PwTeaser_Controller_TeaserController extends Tx_Extbase_MVC_Controller_
 			case 'customChildrenRecursively':
 				$pages = $this->pageRepository->findChildrenRecursivelyByPidList(
 					$this->settings['customPages'],
+					(int) $this->settings['recursionDepthFrom'],
 					(int) $this->settings['recursionDepth']
 				);
 				break;

@@ -96,14 +96,12 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * pid (recursively)
 	 *
 	 * @param integer $pid the pid to search for recursively
+	 * @param integer $recursionDepthFrom Start of recursion depth
 	 * @param integer $recursionDepth Depth of recursion
 	 * @return array All found pages, will be empty if the result is empty
 	 */
-	public function findByPidRecursively($pid, $recursionDepth) {
-		$pagePids = $this->getRecursivePageList($pid, $recursionDepth);
-
-		$this->addQueryConstraint($this->query->in('pid', $pagePids));
-		return $this->executeQuery();
+	public function findByPidRecursively($pid, $recursionDepthFrom, $recursionDepth) {
+		return $this->findChildrenRecursivelyByPidList($pid, $recursionDepthFrom, $recursionDepth);
 	}
 
 	/**
@@ -178,13 +176,14 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * pidlist (recursively)
 	 *
 	 * @param string $pidlist comma seperated list of pids to search for
+	 * @param integer $recursionDepthFrom Start of recursion depth
 	 * @param integer $recursionDepth Depth of recursion
 	 * @return array All found pages, will be empty if the result is empty
 	 */
-	public function findChildrenRecursivelyByPidList($pidlist, $recursionDepth) {
-		$pagePids = $this->getRecursivePageList($pidlist, $recursionDepth);
+	public function findChildrenRecursivelyByPidList($pidlist, $recursionDepthFrom, $recursionDepth) {
+		$pagePids = $this->getRecursivePageList($pidlist, $recursionDepthFrom, $recursionDepth);
 
-		$this->addQueryConstraint($this->query->in('pid', $pagePids));
+		$this->addQueryConstraint($this->query->in(($recursionDepthFrom === 0) ? 'pid' : 'uid', $pagePids));
 		return $this->executeQuery();
 	}
 
@@ -232,20 +231,20 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 //			);
 //		}
 //	}
-
-	/**
-	 * Build category constraint for each category (contains)
-	 *
-	 * @param array $categories
-	 * @return array
-	 */
-	protected function buildCategoryConstraint(array $categories) {
-		$contraints = array();
-		foreach ($categories as $category) {
-			$contraints[] = $this->query->contains('categories', $category);
-		}
-		return $contraints;
-	}
+//
+//	/**
+//	 * Build category constraint for each category (contains)
+//	 *
+//	 * @param array $categories
+//	 * @return array
+//	 */
+//	protected function buildCategoryConstraint(array $categories) {
+//		$contraints = array();
+//		foreach ($categories as $category) {
+//			$contraints[] = $this->query->contains('categories', $category);
+//		}
+//		return $contraints;
+//	}
 
 	/**
 	 * Finalize given query constraints and executes the query
@@ -310,10 +309,11 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 	 * Get subpages recursivley of given pid(s).
 	 *
 	 * @param string $pidlist List of pageUids to get subpages of. May contain a single uid.
+	 * @param integer $recursionDepthFrom Start of recursion depth
 	 * @param integer $recursionDepth Depth of recursion
 	 * @return array Found subpages, recursivley
 	 */
-	protected function getRecursivePageList($pidlist, $recursionDepth) {
+	protected function getRecursivePageList($pidlist, $recursionDepthFrom, $recursionDepth) {
 		/** @var tslib_cObj $contentObjectRenderer */
 		$contentObjectRenderer = t3lib_div::makeInstance('tslib_cObj');
 
@@ -322,11 +322,13 @@ class Tx_PwTeaser_Domain_Repository_PageRepository extends Tx_Extbase_Persistenc
 		foreach ($pids as $pid) {
 			$pageList = t3lib_div::intExplode(
 				',',
-				$contentObjectRenderer->getTreeList($pid, $recursionDepth),
+				$contentObjectRenderer->getTreeList($pid, $recursionDepth, $recursionDepthFrom),
 				TRUE
 			);
 			$pagePids = array_merge($pagePids, $pageList);
-			array_unshift($pagePids, $pid);
+			if ($recursionDepthFrom === 0) {
+				array_unshift($pagePids, $pid);
+			}
 		}
 		return array_unique($pagePids);
 	}
